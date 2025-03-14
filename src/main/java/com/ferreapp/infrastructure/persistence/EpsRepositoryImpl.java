@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.ferreapp.domain.entities.Eps;
@@ -117,13 +117,6 @@ public class EpsRepositoryImpl implements EpsRepository {
     }
 
     @Override
-    public Optional<Eps> findFirstByName(String name) {
-        return findAllAsMap().values().stream()
-            .filter(eps -> eps.getName().equalsIgnoreCase(name))
-            .findFirst();
-    }
-
-    @Override
     public Map<Integer, Eps> findByIds(List<Integer> ids) {
         return findAllAsMap().entrySet().stream()
             .filter(entry -> ids.contains(entry.getKey()))
@@ -139,6 +132,16 @@ public class EpsRepositoryImpl implements EpsRepository {
             .filter(eps -> eps.getName().toLowerCase().startsWith(prefix.toLowerCase()))
             .sorted(Comparator.comparing(Eps::getName))
             .collect(Collectors.toList());
+    }
+    @Override
+    public List<Eps> findByNameContainingV2(String searchTerm, Map<Integer, Eps> epsMap) {
+        return  epsMap.values().stream()
+            .filter(eps -> eps.getName().toLowerCase().contains(searchTerm.toLowerCase()))
+            .collect(Collectors.toList());
+    }
+    @Override
+    public Map<Integer, Eps> findFirstByName(String texto, Map<Integer, Eps> epsMap) {
+        return epsMap.entrySet().stream().filter(eps -> eps.getValue().getName().startsWith(texto)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }

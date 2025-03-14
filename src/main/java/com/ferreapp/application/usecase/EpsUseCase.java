@@ -45,8 +45,8 @@ public class EpsUseCase {
         return epsRepository.findByNameContaining(termino);
     }
     
-    public Optional<Eps> buscarPorNombreExacto(String nombre) {
-        return epsRepository.findFirstByName(nombre);
+    public Map<Integer, Eps> buscarPorNombreExacto(String name, Map<Integer, Eps> texto2) {
+        return epsRepository.findFirstByName(name, texto2);
     }
     
     public Map<Integer, Eps> obtenerEpsPorIds(List<Integer> ids) {
@@ -55,5 +55,8 @@ public class EpsUseCase {
     
     public List<Eps> buscarPorPrefijo(String prefijo) {
         return epsRepository.findByNameStartingWith(prefijo);
+    }
+    public List<Eps> buscarPorNombreParcialV2(String termino, Map<Integer, Eps> epsMap) {
+        return epsRepository.findByNameContainingV2(termino, epsMap);
     }
 }
